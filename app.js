@@ -1,13 +1,11 @@
 
+
+
 const express = require('express');
 const app = express();
 const path = require("path");
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-
-var PORT=8080;
-
-import React from 'react';
 
 //connect database//n
 var connection = mysql.createConnection({
@@ -155,3 +153,4 @@ function artistSearch() {
         });
       });
   }
+
