@@ -27,7 +27,7 @@ function runSearch() {
             type: "list",
             message: "What would you like to do?",
             choices: [
-                "Find songs by artist",
+                "Find songs by hairdresser",
                 "Find all artists who appear more than once",
                 "Find client number within a specific range",
                 "Search for a specific song",
