@@ -12,7 +12,7 @@ var PORT=8080;
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'dr274178',
+    password: '',
     database: 'salon_data'
 });
 
