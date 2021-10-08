@@ -7,13 +7,12 @@ var inquirer = require("inquirer");
 
 var PORT=8080;
 
-import React from 'react';
 
 //connect database//n
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Daney123!',
+    password: 'dr274178',
     database: 'salon_data'
 });
 
@@ -30,8 +29,8 @@ function runSearch() {
             choices: [
                 "Find songs by artist",
                 "Find all artists who appear more than once",
-                "Find data within a specific range",
-                "Search fort a specific song",
+                "Find client number within a specific range",
+                "Search for a specific song",
                 "Exit"
             ]
          })
@@ -43,7 +42,7 @@ function runSearch() {
         case "Find all artists who appear more than once":
         multiSearch();
         break;
-        case "Find data within a specific range":
+        case "Find client number within a specific range":
         rangeSearch();
         break;
         case "Search for a specific song":
@@ -90,7 +89,7 @@ function artistSearch() {
         {
           name: "start",
           type: "input",
-          message: "Enter starting position: ",
+          message: "Enter starting client number: ",
           validate: function(value) {
             if (isNaN(value) === false) {
               return true;
@@ -101,7 +100,7 @@ function artistSearch() {
         {
           name: "end",
           type: "input",
-          message: "Enter ending position: ",
+          message: "Enter ending client number: ",
           validate: function(value) {
             if (isNaN(value) === false) {
               return true;
@@ -111,19 +110,19 @@ function artistSearch() {
         }
       ])
       .then(function(answer) {
-        var query = "SELECT position,song,artist,year FROM top5000 WHERE position BETWEEN ? AND ?";
+        var query = "SELECT first_name, last_name, phone_number, service_type FROM salon_data WHERE client_id BETWEEN ? AND ?";
         connection.query(query, [answer.start, answer.end], function(err, res) {
           if (err) throw err;
           for (var i = 0; i < res.length; i++) {
             console.log(
-              "Position: " +
-                res[i].position +
-                " || Song: " +
-                res[i].song +
-                " || Artist: " +
-                res[i].artist +
-                " || Year: " +
-                res[i].year
+              "First name: " +
+                res[i].first_name +
+                " || Last name: " +
+                res[i].last_name +
+                " || Phone: " +
+                res[i].phone_number +
+                " || Service: " +
+                res[i].service_type
             );
           }
           runSearch();
