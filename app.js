@@ -8,7 +8,7 @@ var inquirer = require("inquirer");
 var PORT=8080;
 
 
-//connect database//n
+//connect database//
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
