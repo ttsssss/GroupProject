@@ -36,7 +36,7 @@ function runSearch() {
          })
         .then(function (answer) {
         switch(answer.action) {
-        case "Find songs by artist":
+        case "Find songs by hairdresser":
         artistSearch();
         break;
         case "Find all artists who appear more than once":
