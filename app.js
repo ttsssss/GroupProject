@@ -1,14 +1,10 @@
-
 const express = require('express');
 const app = express();
 const path = require("path");
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
-var PORT=8080;
-
-
-//connect database//
+//connect database//n
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -27,26 +23,22 @@ function runSearch() {
             type: "list",
             message: "What would you like to do?",
             choices: [
-                "Find songs by hairdresser",
-                "Find all artists who appear more than once",
+                "Find clients by hairstylist",
+                "Find a specific client",
                 "Find client number within a specific range",
-                "Search for a specific song",
                 "Exit"
             ]
          })
         .then(function (answer) {
         switch(answer.action) {
-        case "Find songs by artist":
-        artistSearch();
+        case "Find clients by hairstylist":
+        hairstylistSearch();
         break;
-        case "Find all artists who appear more than once":
-        multiSearch();
+        case "Find a specific client":
+        clientSearch();
         break;
         case "Find client number within a specific range":
         rangeSearch();
-        break;
-        case "Search for a specific song":
-        songSearch();
         break;
         case "Exit":
         connection.end();
@@ -55,33 +47,48 @@ function runSearch() {
     });
 }    
 //funcitons        
-function artistSearch() {
+function hairstylistSearch() {
     inquirer
       .prompt({
-        name: "artist",
+        name: "hairstylist",
         type: "input",
-        message: "What artist would you like to search for?"
+        message: "What hairstylist would you like to search for?"
       })
       .then(function(answer) {
-        var query = "SELECT position, song, year FROM top5000 WHERE ?";
-        connection.query(query, { artist: answer.artist }, function(err, res) {
+        var query = "SELECT first_name, last_name, hairstylist FROM salon_data___sheet1 WHERE ?";
+        connection.query(query, { hairstylist: answer.hairstylist }, function(err, res) {
           if (err) throw err;
           for (var i = 0; i < res.length; i++) {
-            console.log("Position: " + res[i].position + " || Song: " + res[i].song + " || Year: " + res[i].year);
+            console.log("first_name: " + res[i].first_name + " || last_name: " + res[i].last_name);
           }
           runSearch();
         });
       });
   }
-  function multiSearch() {
-    var query = "SELECT artist FROM top5000 GROUP BY artist HAVING count(*) > 1";
-    connection.query(query, function(err, res) {
-      if (err) throw err;
-      for (var i = 0; i < res.length; i++) {
-        console.log(res[i].artist);
-      }
-      runSearch();
-    });
+  function clientSearch() {
+    inquirer
+      .prompt({
+        name: "client",
+        type: "input",
+        message: "What client would you like to look for?"
+      })
+      .then(function(answer) {
+        console.log(answer.client);
+        connection.query("SELECT first_name, last_name, phone_number, email FROM salon_data___sheet1 WHERE ?", { first_name: answer.client }, function(err, res) {
+          if (err) throw err;
+          console.log(
+            "First Name: " +
+              res[0].first_name +
+              " || Last Name: " +
+              res[0].last_name +
+              " || Phone Number: " +
+              res[0].phone_number +
+              " || Email: " +
+              res[0].email
+          );
+          runSearch();
+        });
+      });
   }
   function rangeSearch() {
     inquirer
@@ -125,31 +132,6 @@ function artistSearch() {
                 res[i].service_type
             );
           }
-          runSearch();
-        });
-      });
-  }
-  function songSearch() {
-    inquirer
-      .prompt({
-        name: "song",
-        type: "input",
-        message: "What song would you like to look for?"
-      })
-      .then(function(answer) {
-        console.log(answer.song);
-        connection.query("SELECT * FROM top5000 WHERE ?", { song: answer.song }, function(err, res) {
-          if (err) throw err;
-          console.log(
-            "Position: " +
-              res[0].position +
-              " || Song: " +
-              res[0].song +
-              " || Artist: " +
-              res[0].artist +
-              " || Year: " +
-              res[0].year
-          );
           runSearch();
         });
       });
